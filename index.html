@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>無料で画像をループGIFに変換｜ローカル版</title>
+  <meta name="description" content="画像を1枚選ぶだけで、ループGIFを作れる初心者向けツール。">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- ローカルのGIFライブラリを読み込む -->
+  <script src="GIF.js"></script>
+
+  <style>
+    body { font-family: sans-serif; max-width: 600px; margin: auto; padding: 20px; text-align: center; }
+    h1 { font-size: 26px; margin-bottom: 20px; }
+    h2 { font-size: 20px; margin-top: 30px; }
+    #fileInput { display: none; }
+    .file-label {
+      display: inline-block;
+      padding: 20px 40px;
+      font-size: 18px;
+      font-weight: bold;
+      background-color: #1da1f2;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button { padding: 14px 28px; font-size: 16px; margin-top: 20px; cursor: pointer; }
+    img { max-width: 100%; margin-top: 20px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+
+  <h1>無料で画像をループGIFに変換（ローカル版）</h1>
+  <p>画像を選んでボタンを押すだけでGIFが作れます。</p>
+
+  <label for="fileInput" class="file-label">📁 画像を選択</label>
+  <input type="file" id="fileInput" accept="image/*">
+
+  <br>
+  <button id="createGifBtn">GIFを作る</button>
+
+  <img id="preview" style="display:none;" />
+  <div id="result"></div>
+
+  <h2>使い方</h2>
+  <ul style="text-align: left;">
+    <li>「画像を選択」をクリックして画像を選ぶ</li>
+    <li>プレビューが出るのを確認する</li>
+    <li>「GIFを作る」を押して完成</li>
+    <li>完成したGIFをプレビューしてダウンロード</li>
+  </ul>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const createBtn = document.getElementById('createGifBtn');
+    const resultDiv = document.getElementById('result');
+    const previewImg = document.getElementById('preview');
+
+    // 画像プレビュー
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = e => {
+        previewImg.src = e.target.result;
+        previewImg.style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+    });
+
+    // GIF作成
+    createBtn.addEventListener('click', () => {
+      const file = fileInput.files[0];
+      if (!file) { 
+        alert('画像を選択してください'); 
+        return; 
+      }
+
+      const reader = new FileReader();
+      reader.onload = e => {
+        const img = new Image();
+        img.onload = () => {
+          const maxWidth = 600;
+          const scale = Math.min(1, maxWidth / img.width);
+          const canvas = document.createElement('canvas');
+          canvas.width = img.width * scale;
+          canvas.height = img.height * scale;
+          const ctx = canvas.getContext('2d');
+
+          resultDiv.innerHTML = '<p>GIF作成中…</p>';
+
+          // ローカルの worker を指定
+          const gif = new GIF({
+            workers: 2,
+            quality: 10,
+            repeat: 0,
+            workerScript: 'gif.worker.js'
+          });
+
+          for (let i = 0; i < 10; i++) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            const scaleAnim = 1 + i * 0.02;
+            const w = canvas.width * scaleAnim;
+            const h = canvas.height * scaleAnim;
+            ctx.drawImage(img, (canvas.width - w)/2, (canvas.height - h)/2, w, h);
+            gif.addFrame(ctx, { copy: true, delay: 100 });
+          }
+
+          gif.on('finished', blob => {
+            const url = URL.createObjectURL(blob);
+            resultDiv.innerHTML = `
+              <p>完成したGIF:</p>
+              <img src="${url}">
+              <br>
+              <a href="${url}" download="loop.gif">GIFをダウンロード</a>
+            `;
+          });
+
+          gif.on('error', err => {
+            console.error('GIF生成エラー:', err);
+            resultDiv.innerHTML = `<p style="color:red;">GIF生成に失敗しました: ${err}</p>`;
+          });
+
+          gif.render();
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
+
