@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+
+  <title>画像をGIFに変換｜無料・登録不要のオンラインツール</title>
+
+  <meta name="description" content="PNG・JPG・WEBP画像をGIF形式に変換できる無料オンラインツール。画像はアップロードされず、ブラウザ内で安全に変換できます。登録不要・完全無料。">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+<body>
+
+  <h1>画像をGIFに変換する無料オンラインツール</h1>
+
+  <p>
+    このサイトでは、PNG・JPG・WEBPなどの画像ファイルを
+    <strong>GIF形式に変換</strong>できます。
+    ソフトのインストールや会員登録は不要で、
+    ブラウザ上ですぐに利用できます。
+  </p>
+
+  <h2>使い方</h2>
+  <ol>
+    <li>変換したい画像ファイルを選択</li>
+    <li>「GIFに変換」ボタンをクリック</li>
+    <li>生成されたGIFをダウンロード</li>
+  </ol>
+
+<h2>変換モード</h2>
+<label>
+  <input type="radio" name="mode" value="quality" checked>
+  画質優先（高画質・重め）
+</label>
+<br>
+<label>
+  <input type="radio" name="mode" value="light">
+  軽量優先（画質控えめ・軽い）
+</label>
+
+<br><br>
+
+  <input type="file" id="fileInput" accept="image/*">
+  <br><br>
+  <button id="convertBtn">GIFに変換</button>
+  <br><br>
+  <a id="download" style="display:none;">GIFをダウンロード</a>
+
+  <h2>対応している画像形式</h2>
+  <ul>
+    <li>PNG</li>
+    <li>JPG / JPEG</li>
+    <li>WEBP</li>
+  </ul>
+
+  <h2>このツールの特徴</h2>
+  <ul>
+    <li>完全無料</li>
+    <li>登録・ログイン不要</li>
+    <li>画像はサーバーにアップロードされません</li>
+    <li>ブラウザ内で完結するので安全</li>
+  </ul>
+
+  <h2>よくある質問</h2>
+
+  <h3>画像は保存されますか？</h3>
+  <p>
+    いいえ。画像データはブラウザ内でのみ処理され、
+    外部サーバーへ送信されることはありません。
+  </p>
+
+  <h3>スマホでも使えますか？</h3>
+  <p>
+    はい。スマートフォン・タブレット・PCのいずれでも利用できます。
+  </p>
+
+  <script src="https://cdn.jsdelivr.net/npm/gifshot@0.3.2/build/gifshot.min.js"></script>
+  <script src="main.js"></script>
+
+</body>
+</html>
+
+
